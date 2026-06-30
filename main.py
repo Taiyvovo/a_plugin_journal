@@ -121,7 +121,7 @@ class JournalPlugin(Star):
             url = await self.html_render(
                 JOURNAL_TMPL,
                 data,
-                options={"timeout": 30000, "full_page": False, "omit_background": False},
+                options={"timeout": 30000,"full_page": False,"width": 720,"omit_background": False,}
             )
         except Exception as e:
             logger.error(f"手帐图片渲染失败: {e}")
