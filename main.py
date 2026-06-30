@@ -8,8 +8,18 @@ from astrbot.api import logger
 # 米黄纸张底色 + 纸纹理 + washi tape 胶带 + 邮戳日期章 + 手写体标题
 JOURNAL_TMPL = """
 <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: fit-content;
+        height: fit-content;
+    }
+    * { box-sizing: border-box; }
+</style>
 <div style="
     width: 720px;
+    display: inline-block;
     box-sizing: border-box;
     background: #f7f1e3;
     background-image:
@@ -106,7 +116,13 @@ class JournalPlugin(Star):
         }
 
         try:
-            url = await self.html_render(JOURNAL_TMPL, data, options={"timeout": 30000})
+            # full_page=False + 不传 clip:配合模板里的 fit-content 重置,
+            # 让截图紧贴卡片本身,避免页面默认视口造成的大片白边
+            url = await self.html_render(
+                JOURNAL_TMPL,
+                data,
+                options={"timeout": 30000, "full_page": True, "omit_background": False},
+            )
         except Exception as e:
             logger.error(f"手帐图片渲染失败: {e}")
             yield event.plain_result("手帐渲染失败了,稍后再试试吧 😢")
